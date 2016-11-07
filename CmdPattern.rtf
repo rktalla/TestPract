@@ -1,0 +1,155 @@
+{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil Consolas;}{\f1\fnil\fcharset0 Calibri;}}
+{\colortbl ;\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;\red255\green0\blue0;}
+{\*\generator Msftedit 5.41.21.2510;}\viewkind4\uc1\pard\sa200\sl276\slmult1\cf1\highlight2\lang9\f0\fs19     \cf3 public\cf1  \cf3 partial\cf1  \cf3 class\cf1  \cf4 App\cf1  : \cf4 Application\cf1\par
+    \{\par
+        \cf3 protected\cf1  \cf3 override\cf1  \cf3 void\cf1  OnStartup(\cf4 StartupEventArgs\cf1  e)\par
+        \{\par
+            \cf3 base\cf1 .OnStartup(e);\par
+            WpfMvvmTest.\cf4 MainWindow\cf1  window = \cf3 new\cf1  \cf4 MainWindow\cf1 ();\par
+            \cf4 ProductViewModel\cf1  VM = \cf3 new\cf1  \cf4 ProductViewModel\cf1 ();\par
+            window.DataContext = VM;\par
+            window.Show();\par
+        \}\par
+    \}\par
+\par
+\par
+\par
+\par
+\par
+    \cf3 public\cf1  \cf3 class\cf1  \cf4 Product\cf1  : \cf4 INotifyPropertyChanged\cf1\par
+    \{\par
+        \cf3 private\cf1  \cf3 int\cf1  m_ID;\par
+        \cf3 private\cf1  \cf3 string\cf1  m_Name;\par
+        \cf3 private\cf1  \cf3 double\cf1  m_Price;\par
+\par
+        \cf3 public\cf1  \cf3 int\cf1  ID\par
+        \{\par
+            \cf3 get\cf1  \{ \cf3 return\cf1  m_ID; \}\par
+            \cf3 set\cf1  \{ \par
+                m_ID = \cf3 value\cf1 ;\par
+                \cf3 if\cf1  (PropertyChanged != \cf3 null\cf1 )\par
+                    PropertyChanged(\cf3 this\cf1 , \cf3 new\cf1  \cf4 PropertyChangedEventArgs\cf1 (\cf5 "ID"\cf1 ));\par
+            \}\par
+        \}\par
+        \cf3 public\cf1  \cf3 string\cf1  Name\par
+        \{\par
+            \cf3 get\cf1  \{ \cf3 return\cf1  m_Name; \}\par
+            \cf3 set\cf1  \{ \par
+                m_Name = \cf3 value\cf1 ;\par
+                \cf3 if\cf1  (PropertyChanged != \cf3 null\cf1 )\par
+                    PropertyChanged(\cf3 this\cf1 , \cf3 new\cf1  \cf4 PropertyChangedEventArgs\cf1 (\cf5 "Name"\cf1 ));\par
+            \}\par
+        \}\par
+        \cf3 public\cf1  \cf3 double\cf1  Price\par
+        \{\par
+            \cf3 get\cf1  \{ \cf3 return\cf1  m_Price; \}\par
+            \cf3 set\cf1  \{ \par
+                m_Price = \cf3 value\cf1 ;\par
+                \cf3 if\cf1  (PropertyChanged != \cf3 null\cf1 )\par
+                PropertyChanged(\cf3 this\cf1 ,\cf3 new\cf1  \cf4 PropertyChangedEventArgs\cf1 (\cf5 "Price"\cf1 ));\par
+            \}\par
+        \}\par
+        \cf3 public\cf1  \cf3 event\cf1  \cf4 PropertyChangedEventHandler\cf1  PropertyChanged;\par
+    \}\par
+\par
+    \cf3 public\cf1  \cf3 class\cf1  \cf4 ProductViewModel\cf1\par
+    \{\par
+        \cf3 private\cf1  \cf4 IList\cf1 <\cf4 Product\cf1 > m_Products;\par
+\par
+        \cf3 public\cf1  ProductViewModel()\par
+        \{\par
+           m_Products = \cf3 new\cf1  \cf4 List\cf1 <\cf4 Product\cf1 >\par
+            \{\par
+                \cf3 new\cf1  \cf4 Product\cf1  \{ID=1, Name =\cf5 "Pro1"\cf1 , Price=10\},\par
+                \cf3 new\cf1  \cf4 Product\cf1\{ID=2, Name=\cf5 "BAse2"\cf1 , Price=12\}\par
+            \};\par
+        \}\par
+        \cf3 public\cf1  \cf4 IList\cf1 <\cf4 Product\cf1 > Products\par
+        \{\par
+            \cf3 get\cf1\par
+            \{\par
+                \cf3 return\cf1  m_Products;\par
+            \}\par
+            \cf3 set\cf1\par
+            \{\par
+                m_Products = \cf3 value\cf1 ;\par
+            \}\par
+        \}\par
+        \cf3 private\cf1  \cf4 ICommand\cf1  mUpdater;\par
+        \cf3 public\cf1  \cf4 ICommand\cf1  UpdateCommand\par
+        \{\par
+            \cf3 get\cf1\par
+            \{\par
+                \cf3 if\cf1  (mUpdater == \cf3 null\cf1 )\par
+                    mUpdater = \cf3 new\cf1  \cf4 Updater\cf1 ();\par
+                \cf3 return\cf1  mUpdater;\par
+            \}\par
+            \cf3 set\cf1\par
+            \{\par
+                mUpdater = \cf3 value\cf1 ;\par
+            \}\par
+        \}\par
+        \cf3 private\cf1  \cf3 class\cf1  \cf4 Updater\cf1  : \cf4 ICommand\cf1\par
+        \{\par
+            \cf3 public\cf1  \cf3 bool\cf1  CanExecute(\cf3 object\cf1  parameter)\par
+            \{\par
+               \cf3 return\cf1  \cf3 true\cf1 ;\par
+            \}\par
+            \cf3 public\cf1  \cf3 event\cf1  \cf4 EventHandler\cf1  CanExecuteChanged;\par
+            \cf3 public\cf1  \cf3 void\cf1  Execute(\cf3 object\cf1  parameter)\par
+            \{\par
+            \}\par
+        \}\par
+    \}\par
+\par
+\par
+\par
+\par
+\par
+\par
+\par
+\cf3 <\cf5 Window\cf6  x\cf3 :\cf6 Class\cf3 ="WpfMvvmTest.MainWindow"\cf1\par
+       \cf6  xmlns\cf3 ="http://schemas.microsoft.com/winfx/2006/xaml/presentation"\cf1\par
+       \cf6  xmlns\cf3 :\cf6 x\cf3 ="http://schemas.microsoft.com/winfx/2006/xaml"\cf1\par
+       \cf6  xmlns\cf3 :\cf6 local\cf3 ="clr-namespace:WpfMvvmTest"\cf1\par
+       \cf6  Title\cf3 ="MainWindow"\cf6  Height\cf3 ="350"\cf6  Width\cf3 ="525">\cf1\par
+    \cf3 <\cf5 Window.DataContext\cf3 >\cf1\par
+        \cf3 <\cf5 local\cf3 :\cf5 ProductViewModel\cf3 />\cf1\par
+    \cf3 </\cf5 Window.DataContext\cf3 >\cf1\par
+    \cf3 <\cf5 Grid\cf6  Height\cf3 ="314">\cf1\par
+        \cf3 <\cf5 Grid.RowDefinitions\cf3 >\cf1\par
+            \cf3 <\cf5 RowDefinition\cf6  Height\cf3 ="Auto"/>\cf1\par
+            \cf3 <\cf5 RowDefinition\cf6  Height\cf3 ="*"/>\cf1\par
+            \cf3 <\cf5 RowDefinition\cf6  Height\cf3 ="Auto"/>\cf1\par
+        \cf3 </\cf5 Grid.RowDefinitions\cf3 >\cf1\par
+\par
+        \cf3 <\cf5 ListView\cf6  Name\cf3 ="ListViewEmployeeDetails"\cf6  Grid.Row\cf3 ="1"\cf6  Margin\cf3 ="4,109,12,23"\cf1  \cf6  ItemsSource\cf3 ="\{\cf5 Binding\cf6  Products\cf3\}"\cf1  \cf3  >\cf1\par
+            \cf3 <\cf5 ListView.View\cf3 >\cf1\par
+                \cf3 <\cf5 GridView\cf6  x\cf3 :\cf6 Name\cf3 ="grdTest">\cf1\par
+                    \cf3 <\cf5 GridViewColumn\cf6  Header\cf3 ="ID"\cf6  DisplayMemberBinding\cf3 ="\{\cf5 Binding\cf6  ID\cf3\}"\cf1  \cf6  Width\cf3 ="100"/>\cf1\par
+                    \cf3 <\cf5 GridViewColumn\cf6  Header\cf3 ="Name"\cf6  DisplayMemberBinding\cf3 ="\{\cf5 Binding\cf6  Name\cf3\}"\cf1  \cf6  Width\cf3 ="100" />\cf1\par
+                    \cf3 <\cf5 GridViewColumn\cf6  Header\cf3 ="Price"\cf6  DisplayMemberBinding\cf3 ="\{\cf5 Binding\cf6  Price\cf3\}"\cf6  Width\cf3 ="100" />\cf1\par
+                \cf3 </\cf5 GridView\cf3 >\cf1\par
+            \cf3 </\cf5 ListView.View\cf3 >\cf1\par
+        \cf3 </\cf5 ListView\cf3 >\cf1\par
+\par
+        \cf3 <\cf5 TextBox\cf6  Grid.Row\cf3 ="1"\cf6  Height\cf3 ="23"\cf6  HorizontalAlignment\cf3 ="Left"\cf6  Margin\cf3 ="80,7,0,0"\cf6  Name\cf3 ="txtID"\cf6  VerticalAlignment\cf3 ="Top"\cf1  \cf6  Width\cf3 ="178"\cf6  Text\cf3 ="\{\cf5 Binding\cf6  ElementName\cf3 =ListViewEmployeeDetails,\cf6 Path\cf3 =SelectedItem.ID\}" />\cf1\par
+\par
+        \cf3 <\cf5 TextBox\cf6  Grid.Row\cf3 ="1"\cf6  Height\cf3 ="23"\cf6  HorizontalAlignment\cf3 ="Left"\cf6  Margin\cf3 ="80,35,0,0"\cf6  Name\cf3 ="txtName"\cf6  VerticalAlignment\cf3 ="Top"\cf6  Width\cf3 ="178"\cf6  Text\cf3 ="\{\cf5 Binding\cf6  ElementName\cf3 =ListViewEmployeeDetails,\cf6 Path\cf3 =SelectedItem.Name\}" />\cf1\par
+\par
+        \cf3 <\cf5 TextBox\cf6  Grid.Row\cf3 ="1"\cf6  Height\cf3 ="23"\cf6  HorizontalAlignment\cf3 ="Left"\cf6  Margin\cf3 ="80,61,0,0"\cf6  Name\cf3 ="txtPrice"\cf6  VerticalAlignment\cf3 ="Top"\cf6  Width\cf3 ="178"\cf6  Text\cf3 ="\{\cf5 Binding\cf6  ElementName\cf3 =ListViewEmployeeDetails,\cf6 Path\cf3 =SelectedItem.Price\}" />\cf1\par
+\par
+        \cf3 <\cf5 Label\cf6  Content\cf3 ="ID"\cf6  Grid.Row\cf3 ="1"\cf6  HorizontalAlignment\cf3 ="Left"\cf6  Margin\cf3 ="12,12,0,274"\cf6  Name\cf3 ="label1" />\cf1\par
+\par
+        \cf3 <\cf5 Label\cf6  Content\cf3 ="Price"\cf6  Grid.Row\cf3 ="1"\cf6  Height\cf3 ="28"\cf6  HorizontalAlignment\cf3 ="Left"\cf6  Margin\cf3 ="12,59,0,0"\cf6  Name\cf3 ="label2"\cf6  VerticalAlignment\cf3 ="Top" />\cf1\par
+\par
+        \cf3 <\cf5 Label\cf6  Content\cf3 ="Name"\cf6  Grid.Row\cf3 ="1"\cf6  Height\cf3 ="28"\cf6  HorizontalAlignment\cf3 ="Left"\cf6  Margin\cf3 ="12,35,0,0"\cf6  Name\cf3 ="label3"\cf6  VerticalAlignment\cf3 ="Top" />\cf1\par
+\par
+        \cf3 <\cf5 Button\cf6  Content\cf3 ="Update"\cf6  Grid.Row\cf3 ="1"\cf6  Height\cf3 ="23"\cf6  HorizontalAlignment\cf3 ="Left"\cf6  Margin\cf3 ="310,40,0,0"\cf6  Name\cf3 ="btnUpdate"\cf1\par
+                \cf6  VerticalAlignment\cf3 ="Top"\cf6  Width\cf3 ="141"\cf1   \cf6  Command\cf3 ="\{\cf5 Binding\cf6  Path\cf3 =UpdateCommand\}"/>\cf1\par
+\par
+    \cf3 </\cf5 Grid\cf3 >\cf1\par
+\cf3 </\cf5 Window\cf3 >\cf1\par
+\cf0\highlight0\f1\fs22\par
+}
+ 
