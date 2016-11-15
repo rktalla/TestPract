@@ -1,0 +1,906 @@
+//project references
+System
+System.Data
+System.Deployment
+System.Drawing
+System.Management
+System.Windows.Forms
+System.Xml
+
+
+//Program.cs
+using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
+
+namespace BatchProcessingDemo
+{
+    static class Program
+    {
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        [STAThread]
+        static void Main()
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Form1());
+        }
+    }
+}
+
+
+
+//class1.cs
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace BatchProcessingDemo
+{
+    class TestClass
+    {
+        List<Customer> mCustomerList;
+
+        public TestClass(List<Customer> customerList)
+        {
+            mCustomerList = customerList;
+        }
+
+        public void UpdateCustomers()
+        {
+            foreach (Customer customerToUpdate in mCustomerList)
+            {
+                customerToUpdate.Discount *= 1.10;
+            }
+        }
+    }
+}
+
+
+
+//UILayer
+//IMainView.cs
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace BatchProcessingDemo
+{
+    interface IMainView
+    {
+        void UpdateLog(string message);
+    }
+}
+
+//UILayer
+//Form1.cs
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Windows.Forms;
+
+namespace BatchProcessingDemo
+{
+    public partial class Form1 : Form, IMainView
+    {
+        #region Data
+        Controller mController;
+        #endregion
+
+        #region Form methods
+        public Form1()
+        {
+            mController = new Controller();
+            InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            mController.ProcessCustomers(this);
+        }
+        #endregion
+
+        #region IMainView Members
+        public void UpdateLog(string logEntry)
+        {
+            if (textBoxLog.InvokeRequired)
+            {
+                MethodInvoker invoker = new MethodInvoker(delegate
+                {
+                    textBoxLog.AppendText(logEntry + "\r\n");
+                }
+                );
+                textBoxLog.Invoke(invoker);
+            }
+            else
+            {
+                textBoxLog.AppendText(logEntry + "\r\n");
+            }
+        }
+
+        #endregion
+    }
+}
+
+
+//UILayer
+//Form1.Designer.cs
+
+namespace BatchProcessingDemo
+{
+    partial class Form1
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.button1 = new System.Windows.Forms.Button();
+            this.textBoxLog = new System.Windows.Forms.TextBox();
+            this.SuspendLayout();
+            // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.Location = new System.Drawing.Point(542, 346);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 0;
+            this.button1.Text = "Run!";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // textBoxLog
+            // 
+            this.textBoxLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxLog.Location = new System.Drawing.Point(12, 12);
+            this.textBoxLog.Multiline = true;
+            this.textBoxLog.Name = "textBoxLog";
+            this.textBoxLog.Size = new System.Drawing.Size(605, 328);
+            this.textBoxLog.TabIndex = 1;
+            // 
+            // Form1
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(629, 381);
+            this.Controls.Add(this.textBoxLog);
+            this.Controls.Add(this.button1);
+            this.Name = "Form1";
+            this.Text = "Form1";
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox textBoxLog;
+    }
+}
+
+//UILayer
+//Form1.resx
+
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+</root>
+
+ 
+//BusinessLayer
+//Customer.cs
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace BatchProcessingDemo
+{
+    class Customer
+    {
+        #region data
+        private long mID;
+
+        public long ID
+        {
+            get { return mID; }
+            set { mID = value; }
+        }
+
+        private string mName;
+
+        public string Name
+        {
+            get { return mName; }
+            set { mName = value; }
+        }
+
+        private double mDiscount;
+
+        public double Discount
+        {
+            get { return mDiscount; }
+            set { mDiscount = value; }
+        }
+
+        private string mProvince;
+
+        public string Province
+        {
+            get { return mProvince; }
+            set { mProvince = value; }
+        }
+	
+        #endregion
+
+        #region Constructor
+        public Customer(long id, string name, double discount, string province) 
+        {
+            mID = id;
+            mName = name;
+            mDiscount = discount;
+            mProvince = province;
+        }
+        #endregion
+    }
+}
+
+
+//BusinessLayer
+//Controller.cs
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading;
+using System.Management;
+
+namespace BatchProcessingDemo
+{
+    class Controller
+    {
+        #region Data
+        /// <summary>
+        /// Interface to the main form. Used to update control on the form.
+        /// </summary>
+        IMainView mMainForm;
+        /// <summary>
+        /// Complete list of all customers
+        /// </summary>
+        SortedList<long, Customer> mCustomerList;
+        /// <summary>
+        /// Semaphore to control the launching of worker threads
+        /// </summary>
+        Semaphore mSemaphore;
+        /// <summary>
+        /// List of exceptions that might have been raised by threads with no direct access to the UI thread
+        /// </summary>
+        List<Exception> mExceptions;
+        /// <summary>
+        /// Locking object for thread safety. Used when updating an object that multiple threads have access 
+        /// to so that no corruption occurs.
+        /// </summary>
+        object mLock;
+        /// <summary>
+        /// Maximum number of threads to use per CPU when using processing concurrent batches
+        /// </summary>
+        const int mMaxNumberOfThreadsPerCpu = 2;
+        #endregion
+
+        #region Constructor
+        /// <summary>
+        /// 
+        /// </summary>
+        public Controller()
+        {
+            mCustomerList = new SortedList<long, Customer>();
+            mExceptions = new List<Exception>();
+            mLock = new object();
+        }
+        #endregion
+
+        #region Public methods
+        /// <summary>
+        /// A business method. Loads the customer list and  processes it with and without multiple threads.
+        /// </summary>
+        /// <param name="mainForm"></param>
+        public void ProcessCustomers(IMainView mainForm)
+        {
+            mMainForm = mainForm;
+            ThreadPool.QueueUserWorkItem(new WaitCallback(ProcessCustomersInThread));
+        }
+        #endregion
+
+        #region Private methods
+        /// <summary>
+        /// Main entry point for processing all customers. Loads the list, and then processes all the entries.
+        /// </summary>
+        /// <param name="state"></param>
+        private void ProcessCustomersInThread(object state)
+        {
+            try
+            {
+                GenerateCustomerList();
+                UpdateAllCustomersInOneBatch();
+                UpdateAllCustomersInConcurrentBatches();
+            }
+            catch (Exception ex)
+            {
+                lock (mLock)
+                {
+                    mExceptions.Add(ex);
+                }
+            }
+            finally
+            {
+                foreach (Exception ex in mExceptions)
+                {
+                    mMainForm.UpdateLog(ex.Message);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Updates all customers by employing concurrent threads and splitting the work into smaller batches.
+        /// </summary>
+        private void UpdateAllCustomersInConcurrentBatches()
+        {
+            ManagementObjectSearcher managementObjectSearcher = new ManagementObjectSearcher("select * from Win32_Processor");
+            ManagementObjectCollection managementObjectCollection = managementObjectSearcher.Get();
+            int numberOfCpus = managementObjectCollection.Count;
+            int numberOfThreadsToUse = numberOfCpus * mMaxNumberOfThreadsPerCpu;
+            int batchSize = 5000;
+
+            DateTime startingDateTime = DateTime.Now;
+            AddLogEntry(string.Format("Start data update in {0} concurrent batches of {1} records at: {2},", numberOfThreadsToUse, batchSize, startingDateTime.ToString()));
+
+            mSemaphore = new Semaphore(numberOfThreadsToUse, numberOfThreadsToUse);
+
+            // get a list of all the key values to process
+            List<long> allCustomerIDs = new List<long>(mCustomerList.Keys);
+            while (allCustomerIDs.Count > 0)
+            { 
+                // make of list of customer IDs to process in the next batch
+                List<long> customerIDsToProcess = allCustomerIDs.GetRange(0, System.Math.Min(batchSize, allCustomerIDs.Count));
+                // remove those customer IDs from the master list so they are not processed again
+                allCustomerIDs.RemoveRange(0, System.Math.Min(batchSize, allCustomerIDs.Count));
+
+                // wait for for the semaphore to let us launch another thread
+                mSemaphore.WaitOne();
+
+                ThreadPool.QueueUserWorkItem(new WaitCallback(UpdateAllCustomersInSubBatch), customerIDsToProcess);
+            }
+
+            // ensure all threads have exited by waiting until we can get all the semaphore requests
+            for (int ctr = 0; ctr < numberOfThreadsToUse; ctr++)
+            {
+                mSemaphore.WaitOne();
+            }
+            mSemaphore.Release(numberOfThreadsToUse);
+
+
+            DateTime endingDateTime = DateTime.Now;
+            TimeSpan ellapsedTime = endingDateTime - startingDateTime;
+
+            AddLogEntry(string.Format("Ending data update in multiple batches at: {0},", endingDateTime.ToString()));
+            AddLogEntry(string.Format("Total time to update data: {0},", ellapsedTime.ToString()));
+        }
+
+        /// <summary>
+        /// Processes one small batch of customer objects and exits.
+        /// </summary>
+        /// <param name="state">List<long> containing the customer IDs to process in this batch</long></param>
+        private void UpdateAllCustomersInSubBatch(object state)
+        {
+            try
+            {
+                List<long> customerIDsToProcess = state as List<long>;
+
+                foreach (long customerID in customerIDsToProcess)
+                {
+                    Customer tempCustomer = mCustomerList[customerID];
+                    ApplyBusinessRulesToCustomerObject(ref tempCustomer);
+                    mCustomerList[customerID].Discount = tempCustomer.Discount;
+                    mCustomerList[customerID].Name = tempCustomer.Name;
+                }
+            }
+            catch (Exception ex)
+            {
+                lock (mLock)
+                {
+                    // An exception was raised. This thread has no access to the UI, so store the exception in
+                    // mExceptions and get out.
+                    mExceptions.Add(ex);
+                }
+            }
+            finally
+            {
+                // the work in this thread is complete, so release the semaphore request so that it can be reused to 
+                // launch another thread worker for the next batch.
+                mSemaphore.Release();
+            }
+        }
+
+        /// <summary>
+        /// Updates all customers in one batch, one customer at a time.
+        /// </summary>
+        private void UpdateAllCustomersInOneBatch()
+        {
+            DateTime startingDateTime = DateTime.Now;
+            AddLogEntry(string.Format("Start data update in one batch at: {0},", startingDateTime.ToString()));
+
+            foreach (Customer customerToProcess in mCustomerList.Values)
+            {
+                Customer tempCustomer = customerToProcess;
+                ApplyBusinessRulesToCustomerObject(ref tempCustomer);
+                customerToProcess.Discount = tempCustomer.Discount;
+                customerToProcess.Name = tempCustomer.Name;
+            }
+
+            DateTime endingDateTime = DateTime.Now;
+            TimeSpan ellapsedTime = endingDateTime - startingDateTime;
+
+            AddLogEntry(string.Format("Ending data update in one batch at: {0},", endingDateTime.ToString()));
+            AddLogEntry(string.Format("Total time to update data: {0},", ellapsedTime.ToString()));
+        }
+
+        /// <summary>
+        /// Performs the update on a single customer
+        /// </summary>
+        /// <param name="customer">The customer object to update</param>
+        private void ApplyBusinessRulesToCustomerObject(ref Customer customer)
+        {
+            long remainder;
+
+            System.Math.DivRem(customer.ID, 1000000L, out remainder);
+            if (remainder == 0)
+            {
+                AddLogEntry(string.Format("Processing customer ID {0}", customer.ID));
+            }
+
+            if (customer.Province.Equals("Quebec"))
+            {
+                UpdateCustomerNameAndDiscount(ref customer, 0.9, 1.0);
+            }
+            else if (customer.Province.Equals("Ontario"))
+            {
+                UpdateCustomerNameAndDiscount(ref customer, 1.1, 1.2);
+            }
+            else if (customer.Province.Equals("NewFoundland"))
+            {
+                UpdateCustomerNameAndDiscount(ref customer, 1.3, 1.4);
+            }
+            if (customer.Province.Equals("Alberta"))
+            {
+                UpdateCustomerNameAndDiscount(ref customer, 1.5, 1.6);
+            }
+            else if (customer.Province.Equals("Nunavut"))
+            {
+                UpdateCustomerNameAndDiscount(ref customer, 1.7, 1.8);
+            }
+        }
+
+        /// <summary>
+        /// Updates the name and discount of the particular customer object.
+        /// </summary>
+        /// <param name="customer">Customer object to update</param>
+        /// <param name="increaseOne">Value by which to multiply the discount level if the customer ID is even</param>
+        /// <param name="increaseTwo">Value by which to multiply the discount level if the customer ID is odd</param>
+        private void UpdateCustomerNameAndDiscount(ref Customer customer, double increaseOne, double increaseTwo)
+        {
+            for (int dummy = 0; dummy < 100; dummy++)
+            {
+                StringBuilder reversedName = new StringBuilder();
+                char[] nameCharacters = customer.Name.ToCharArray();
+                for (int charCtr = nameCharacters.Length - 1; charCtr >= 0; charCtr--)
+                {
+                    reversedName.Append(nameCharacters[charCtr]);
+                }
+                customer.Name = reversedName.ToString();
+            }
+            long remainder;
+            System.Math.DivRem(customer.ID, 2L, out remainder);
+            if (remainder == 0)
+            {
+                customer.Discount *= increaseOne;
+            }
+            else
+            {
+                customer.Discount *= increaseTwo;
+            }
+        }
+
+        /// <summary>
+        /// Generate a list of customers.
+        /// </summary>
+        private void GenerateCustomerList()
+        {
+            DateTime startingDateTime = DateTime.Now;
+            AddLogEntry(string.Format("Start data generation at: {0},", startingDateTime.ToString()));
+
+            AddLogEntry("Generating customers for Quebec");
+            for (long id = 1; id <= 1000000; id++)
+            {
+                mCustomerList.Add(id, new Customer(id, string.Format("Mr. and Mrs. {0}", id.ToString()), 10D, "Quebec"));
+            }
+
+            AddLogEntry("Generating customers for Ontario");
+            for (long id = 1000001; id <= 2000000; id++)
+            {
+                mCustomerList.Add(id, new Customer(id, string.Format("Mr. and Mrs. {0}", id.ToString()), 10D, "Ontario"));
+            }
+
+            AddLogEntry("Generating customers for Alberta");
+            for (long id = 2000001; id <= 3000000; id++)
+            {
+                mCustomerList.Add(id, new Customer(id, string.Format("Mr. and Mrs. {0}", id.ToString()), 10D, "Alberta"));
+            }
+
+            AddLogEntry("Generating customers for NewFoundland");
+            for (long id = 3000001; id <= 4000000; id++)
+            {
+                mCustomerList.Add(id, new Customer(id, string.Format("Mr. and Mrs. {0}", id.ToString()), 10D, "NewFoundland"));
+            }
+
+            AddLogEntry("Generating customers for Nunavut");
+            for (long id = 4000001; id <= 5000000; id++)
+            {
+                mCustomerList.Add(id, new Customer(id, string.Format("Mr. and Mrs. {0}", id.ToString()), 10D, "NewFoundland"));
+            }
+
+            DateTime endingDateTime = DateTime.Now;
+            TimeSpan ellapsedTime = endingDateTime - startingDateTime;
+
+            AddLogEntry(string.Format("Ending data generation at: {0},", endingDateTime.ToString()));
+            AddLogEntry(string.Format("Total time to generate data: {0},", ellapsedTime.ToString()));
+        }
+
+        /// <summary>
+        /// Add a log entry to the log textbox on the form.
+        /// </summary>
+        /// <param name="logEntry"></param>
+        private void AddLogEntry(string logEntry)
+        {
+            mMainForm.UpdateLog(logEntry);
+        }
+        #endregion
+    }
+}
+
+
+
+//********************************************
+//********************************************
+//MonitorDbSrvc.cs
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Diagnostics;
+using System.Linq;
+using System.ServiceProcess;
+using System.Text;
+using System.Threading.Tasks;
+using WsMonitorSrvc.Data;
+using System.IO;
+
+namespace WsMonitorSrvc
+{
+    public partial class MonitorDbSrvc : ServiceBase
+    {
+        System.Timers.Timer oTimer = null;
+        double interval = 1000;
+
+        public MonitorDbSrvc()
+        {
+            InitializeComponent();
+            InitializeService();
+        }
+        public void DebugOnStart()
+        {
+            OnStart(null);
+        }
+        void InitializeService()
+        {
+            oTimer = new System.Timers.Timer(interval);
+            oTimer.Enabled = true;
+            oTimer.AutoReset = true;
+            oTimer.Start();
+            oTimer.Elapsed += new System.Timers.ElapsedEventHandler(oTimer_Elapsed);
+        }
+        void oTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            Debug.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            Debug.WriteLine(DateTime.Now);
+
+            DataTable dsCustomer = (new DataAccessMgr()).GetCustomerDetails();
+            string strCust = "";
+            foreach (DataRow dr in dsCustomer.Rows)
+            {
+                strCust += dr["ID"].ToString()
+                         + "," + dr["First_Name"].ToString()
+                         + "," + dr["Last_Name"].ToString()
+                         + "," + dr["Country"].ToString() + Environment.NewLine;
+
+            }
+            string path = @"c:\Rtalla\RTemp\AAASrvc.txt";
+            StreamWriter oStreamWriter = new StreamWriter(path, true);
+            oStreamWriter.WriteLine(strCust);
+            oStreamWriter.Close();
+            oStreamWriter = null;
+
+
+            Debug.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        }
+        protected override void OnStart(string[] args)
+        {
+            oTimer.Enabled = true;
+            oTimer.Start();
+        }
+
+        protected override void OnStop()
+        {
+            oTimer.Stop();
+        }
+    }
+}
+
+
+ 
+
+
+//program.cs
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.ServiceProcess;
+using System.Text;
+using System.Threading.Tasks;
+using System.Data.SqlClient;
+
+namespace WsMonitorSrvc
+{
+    static class Program
+    {
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        static void Main()
+        {
+#if DEBUG
+            MonitorDbSrvc msvc = new MonitorDbSrvc();
+            msvc.DebugOnStart();
+            System.Threading.Thread.Sleep(System.Threading.Timeout.Infinite);
+#else
+
+            ServiceBase[] ServicesToRun;
+            ServicesToRun = new ServiceBase[]
+            {
+                new MonitorDbSrvc()
+            };
+            ServiceBase.Run(ServicesToRun);
+#endif
+        }
+    }
+}
+
+
+
+//db
+create Table tbl_Customer
+(
+ID int,
+First_Name varchar(30),
+Last_Name varchar(30),
+PhoneNo varchar(30),
+EmailID varchar(30),
+City varchar(30),
+Country varchar(30),
+IsWrittenToFile bit
+)
+//DBAccess.cs
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Data;
+using System.Data.SqlClient;
+using System.Configuration;
+
+namespace WsMonitorSrvc.Data
+{
+    public class DataAccessMgr
+    {
+        private string connTxt = "";
+        public DataAccessMgr()
+        {
+            connTxt = ConfigurationSettings.AppSettings["ConnStr"];
+        }
+        public DataTable GetCustomerDetails()
+        {
+            SqlConnection conn = new SqlConnection(connTxt);
+            conn.Open();
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "GetCustDetails";
+            cmd.Connection = conn;
+
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            return dt;
+        }
+    }
+}
+
+------------------------
+CREATE PROCEDURE GetCustDetails
+AS
+BEGIN
+	--select not written rows
+	SELECT * INTO #custData FROM tbl_Customer
+	WHERE IsWrittenToFile = 0
+
+	--update not written rows
+	update tbl_Customer
+	set IsWrittenToFile = 1
+	where ID IN (select ID from #custData)
+
+	--return cutomer details
+	select * from #custData
+END
+
+
+ 
+
+
+
+
+
+
